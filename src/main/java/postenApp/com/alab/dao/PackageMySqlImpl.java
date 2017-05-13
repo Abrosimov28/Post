@@ -15,7 +15,7 @@ import postenApp.com.alab.entity.Pack;
 
 @Repository
 @Qualifier("mySql")
-public class MySql implements PackageDao {
+public class PackageMySqlImpl implements PackageDao {
 
 	private Configuration con;
 	private SessionFactory sf;
@@ -29,25 +29,43 @@ public class MySql implements PackageDao {
 		session = sf.openSession();
 		tx = session.beginTransaction();
 
+	//	databasefill();
+
 		list = session.createCriteria(Pack.class).list();
 		tx.commit();
 		return list;
 	}
+
+	// method for filling the database with prices according to kilos
+//	public void databasefill() {
+//		con = new Configuration().configure().addAnnotatedClass(Pack.class);
+//		con.addAnnotatedClass(postenApp.com.alab.entity.Pack.class);
+//		con.configure();
+//		sf = con.buildSessionFactory();
+//		session = sf.openSession();
+//		tx = session.beginTransaction();
+//		for (int i = 1; i < 36; i++) {
+//			Pack pack = (Pack) session.get(Pack.class, i);
+//			if (pack == null) {
+//				session.save(new Pack(i, 50 + ((i - 1) * 10)));
+//			}
+//		}
+//	}
 
 	public Pack getPriceByWeight(int weight) {
 		con = new Configuration().configure().addAnnotatedClass(Pack.class);
 		sf = con.buildSessionFactory();
 		session = sf.openSession();
 		tx = session.beginTransaction();
+
 		Pack pack = (Pack) session.get(Pack.class, weight);
-		
+
 		tx.commit();
 		return pack;
 	}
 
 	public void insertPackage(Pack pack) {
 		con = new Configuration().configure().addAnnotatedClass(Pack.class);
-
 		con.addAnnotatedClass(postenApp.com.alab.entity.Pack.class);
 		con.configure();
 		sf = con.buildSessionFactory();
